@@ -1,4 +1,7 @@
-# Monitoring-Light-intensity-value-in-Thing-speak-cloud
+## NAME: REVATHI K
+## REG NO: 212223040169
+
+# EX 04 Monitoring Light intensity value in Thing speak cloud
 # Uploading LDR sensor data in Thing Speak cloud
 
 # AIM:
@@ -90,8 +93,75 @@ Prototype and build IoT systems without setting up servers or developing web sof
 
  
 # PROGRAM:
+```
+#include"ThingSpeak.h"
+#include<WiFi.h>
+#include"DHT.h"
+
+
+char id[]="**";
+char pass[]="**";
+
+const int out=23;
+long T;
+float temperature=0;
+
+WiFiClient client;
+DHT dht(23,DHT11);
+
+unsigned long myChannel=**;
+const int TemperatureField=1;
+const int HumidityField=2;
+const char* myWriteAPIKey="9FVX9Z1NMIZ7V06N";
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(out,INPUT);
+  ThingSpeak.begin(client);
+  dht.begin();
+  
+
+}
+
+void loop() {
+  if(WiFi.status()!=WL_CONNECTED)
+  {
+    Serial.print("Attempting to connect to SSID:");
+    Serial.println(id);
+    while(WiFi.status()!=WL_CONNECTED)
+    {
+      WiFi.begin(id,pass);
+      Serial.print(".");
+      delay(5000);
+    }
+    Serial.println("\nConnected.");
+  }
+  float temperature=dht.readTemperature();
+  float humidity=dht.readHumidity();
+
+  Serial.print("Temperature: ");
+  Serial.println(temperature);
+  Serial.println("C");
+
+  Serial.print("Humidity:");
+  Serial.println(humidity);
+  Serial.println("g.m-3");
+
+  ThingSpeak.writeField(myChannel,TemperatureField,temperature,myWriteAPIKey);
+  ThingSpeak.writeField(myChannel,HumidityField,humidity,myWriteAPIKey);
+  delay(1000);
+}
+
+```
 # CIRCUIT DIAGRAM:
+![PIOT EX4](https://github.com/user-attachments/assets/9c911f01-ce0c-459b-93ec-3f1aecdc5902)
+
 # OUTPUT:
+![Screenshot 2025-04-17 143434](https://github.com/user-attachments/assets/b87b8155-edc8-49d1-8869-fc03a80b0df9)
+
+![Screenshot 2025-04-17 142432](https://github.com/user-attachments/assets/2a96038a-87a7-448b-bf28-1a1c4460d739)
+
+
 # RESULT:
 
 Thus the light intensity values are updated in the Thing speak cloud using ESP32 controller.
